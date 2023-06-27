@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    {% load static %}
+    <head>
+        {% block tittle_head %}
+        <title>Page Title</title>
+        {% endblock tittle_head %}
+
+        <link href={% static 'css/styles.css' %} rel="stylesheet"/>
+    </head>
+    <body>
+        <header>
+            <div class="container position relative">
+                <div class="col-xl-6">
+                    <div class="text-center">
+                        <h1 class="mb-5">
+                            {% block h1_header %}
+                            {% endblock h1_header %}
+                        </h1>
+                    </div>
+                </div>
+            </div> 
+        </header>      
+        {% block contenido %}
+        {% endblock contenido %}
+
+        <script scr={% static 'js/scripts.js' %}></script>
+    </body>
+</html>
