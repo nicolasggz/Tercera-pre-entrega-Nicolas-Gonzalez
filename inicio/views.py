@@ -5,3 +5,7 @@ from django.http import HttpResponse
 
 def inicio(request):
     return render(request, 'inicio/inicio.html')
+
+
+def crear_gato(request):
+    return render(request, 'inicio/crear_gato.html')

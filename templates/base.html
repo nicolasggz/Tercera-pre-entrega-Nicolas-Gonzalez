@@ -3,12 +3,22 @@
     {% load static %}
     <head>
         {% block tittle_head %}
-        <title>Page Title</title>
+            <title>Page Title</title>
         {% endblock tittle_head %}
 
         <link href={% static 'css/styles.css' %} rel="stylesheet"/>
     </head>
     <body>
+
+        <nav>
+            <div>
+                <a href={% url 'inicio:inicio' %}> Inicio </a>
+                <br>
+                <a href={% url 'inicio:crear_gato' %}> Gato </a>
+                
+            </div>
+        </nav>
+
         <header>
             <div class="container position relative">
                 <div class="col-xl-6">
