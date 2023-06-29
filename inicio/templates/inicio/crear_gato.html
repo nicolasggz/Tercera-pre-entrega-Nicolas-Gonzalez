@@ -12,8 +12,15 @@ Esta es la parte del Gato
 
 {% block contenido %}
 
+<p>{{mensaje}}</p>
+
 <form action="" method="post">
-    
+    {% csrf_token %}
+    <table>
+        {{formulario}}
+        {{formulario2}}
+        {{formulario3}}
+    </table>
     <button>Crear</button>
 </form>  
 
