@@ -1,41 +1,77 @@
-from django.shortcuts import render
-from inicio.forms import CrearGatoFormulario
-from inicio.forms import CrearPersonaFormulario
-from inicio.forms import CrearUbicacionFormulario
-from inicio.models import Gato
-from inicio.models import persona_responsable
-from inicio.models import ubicacion
+from django.shortcuts import render, redirect
+from .models import Veterinario, Mascota, Propietario
+from .forms import VeterinarioForm, MascotaForm, PropietarioForm
+from .forms import BusquedaForm
 
-# Create your views here.
 
 def inicio(request):
-    return render(request, 'inicio/inicio.html')
-    
+    contexto = {
+        'mensaje': ''
+    }
+    return render(request, 'inicio/inicio.html', contexto)
 
-def crear_gato(request):
-    mensaje = ''
-    
+
+def veterinarios(request):
+    veterinarios = Veterinario.objects.all()
+    return render(request, 'inicio/veterinarios.html', {'veterinarios': veterinarios})
+
+def mascotas(request):
+    mascotas = Mascota.objects.all()
+    return render(request, 'inicio/mascotas.html', {'mascotas': mascotas})
+
+def propietarios(request):
+    propietarios = Propietario.objects.all()
+    return render(request, 'inicio/propietarios.html', {'propietarios': propietarios})
+
+def agregar_veterinario(request):
     if request.method == 'POST':
-        formulario = CrearGatoFormulario(request.POST)
-        formulario2 = CrearPersonaFormulario(request.POST)
-        formulario3 = CrearUbicacionFormulario(request.POST)
-        if formulario.is_valid() and formulario2.is_valid() and formulario3.is_valid():
-            info = formulario.cleaned_data
-            info2 = formulario2.cleaned_data
-            info3 = formulario3.cleaned_data
-            gato = Gato(nombre=info['nombre'],edad=info['edad'],fecha_nacimiento=info['fecha_nacimiento'])
-            persona = persona_responsable(nombre_persona=info2['nombre_persona'],edad_persona=info2['edad_persona'],dni=info2['dni'])
-            ubicacion_persona = ubicacion(direccion=info3['direccion'],pais=info3['pais'],codigo_postal=info3['codigo_postal'])
+        form = VeterinarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('veterinarios')
+    else:
+        form = VeterinarioForm()
+    return render(request, 'inicio/agregar_veterinario.html', {'form': form})
 
-            gato.save()
-            persona.save()
-            ubicacion_persona.save
-            mensaje = f'Se creo el gato {gato.nombre}'
-            return render(request, 'inicio/crear_gato.html', {'formulario': formulario,'formulario2': formulario2,'formulario3': formulario3})
-        else:
-            return render(request, 'inicio/crear_gato.html', {'formulario': formulario,'formulario2': formulario2,'formulario3': formulario3})
-    
-    formulario=CrearGatoFormulario()
-    formulario2=CrearPersonaFormulario()
-    formulario3=CrearUbicacionFormulario()
-    return render(request, 'inicio/crear_gato.html',{'formulario': formulario,'formulario2': formulario2,'formulario3': formulario3, 'mensaje':mensaje})
+def agregar_mascota(request):
+    if request.method == 'POST':
+        form = MascotaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('mascotas')
+    else:
+        form = MascotaForm()
+    return render(request, 'inicio/agregar_mascota.html', {'form': form})
+
+def agregar_propietario(request):
+    if request.method == 'POST':
+        form = PropietarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('propietarios')
+    else:
+        form = PropietarioForm()
+    return render(request, 'inicio/agregar_propietario.html', {'form': form})
+
+from django.shortcuts import render
+from .forms import BusquedaForm
+from .models import Veterinario, Mascota, Propietario
+
+def buscar(request):
+    form = BusquedaForm(request.GET)
+    resultados_veterinarios = []
+    resultados_mascotas = []
+    resultados_propietarios = []
+
+    if form.is_valid():
+        termino_busqueda = form.cleaned_data['termino_busqueda']
+        resultados_veterinarios = Veterinario.objects.filter(nombre__icontains=termino_busqueda)
+        resultados_mascotas = Mascota.objects.filter(nombre__icontains=termino_busqueda)
+        resultados_propietarios = Propietario.objects.filter(nombre__icontains=termino_busqueda)
+
+    return render(request, 'inicio/buscar.html', {
+        'form': form,
+        'resultados_veterinarios': resultados_veterinarios,
+        'resultados_mascotas': resultados_mascotas,
+        'resultados_propietarios': resultados_propietarios
+    })

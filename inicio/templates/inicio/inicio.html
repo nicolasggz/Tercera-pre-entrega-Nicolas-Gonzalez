@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
-{% block tittle_head %}
-<tittle>Inicio</tittle>
-{% endblock tittle_head %}
+{% load static %}
 
+{% block title %}<title>Página de Inicio</title>{% endblock %}
 
-{% block h1_header %}
-Biembenido a mi pagina
-{% endblock h1_header %}
+{% block heading %}¡Bienvenido a la Administracion de Mascotas!{% endblock %}
 
+{% block content %}
+    <div class="container">
+        <p class="mensaje">{{ mensaje }}</p>
+    </div>
+{% endblock %}
 
-{% block contenido %}
-<p>
-    Este es el contenido
-</p>
-{% endblock contenido %}
-
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static '../static/inicio/styles.css' %}">
+{% endblock %}
